@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Coin History | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🧾 Your Coin History</h2>
+
+  {% if transactions %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark text-center">
+          <tr>
+            <th scope="col">Amount</th>
+            <th scope="col">Type</th>
+            <th scope="col">Method</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in transactions %}
+            <tr class="text-center">
+              <td class="{{ 'text-success fw-bold' if tx.amount > 0 else 'text-danger fw-bold' }}">
+                {{ '+' if tx.amount > 0 else '' }}{{ tx.amount }}
+              </td>
+              <td>{{ tx.type|capitalize }}</td>
+              <td>{{ tx.method|capitalize }}</td>
+              <td>{{ tx.timestamp.strftime('%b %d, %Y %I:%M %p') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      You haven't made any coin transactions yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

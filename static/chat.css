@@ -1,0 +1,41 @@
+/* === chat.css === */
+
+/* Video elements styling */
+video {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  background-color: #000; /* fallback background for empty video */
+}
+
+/* Call control buttons */
+#startCallBtn,
+#hangupBtn {
+  width: 150px;
+  font-weight: 700;
+  border-radius: 50px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hover states for buttons */
+#startCallBtn:hover {
+  background-color: #28a745cc; /* semi-transparent green */
+  transform: scale(1.05);
+}
+
+#hangupBtn:hover {
+  background-color: #dc3545cc; /* semi-transparent red */
+  transform: scale(1.05);
+}
+
+/* Disabled button styles */
+#startCallBtn:disabled,
+#hangupBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Browse Matches | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🔥 Browse Potential Matches</h2>
+
+  {% if users %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for user in users %}
+        <div class="col">
+          <div class="card h-100 shadow-sm text-center p-3">
+
+            <!-- Profile Picture -->
+            <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_pic) if user.profile_pic else url_for('static', filename='default_profile.png') }}"
+                 class="card-img-top rounded-circle mx-auto mt-3"
+                 style="width: 150px; height: 150px; object-fit: cover;" 
+                 alt="{{ user.username }}'s profile picture">
+
+            <!-- User Info -->
+            <div class="card-body">
+              <h5 class="card-title">{{ user.username }}</h5>
+              <p class="mb-1"><strong>Gender:</strong> {{ user.gender | default('Not specified') }}</p>
+              <p class="mb-1"><strong>Interests:</strong> {{ user.interests | default('Not specified') }}</p>
+
+              <!-- Safety Badges -->
+              {% if user.age and user.age < 18 %}
+                <span class="badge bg-warning text-dark">⚠️ Under 18</span>
+              {% endif %}
+              {% if user.uses_protection %}
+                <span class="badge bg-success">✔️ Safe Sex Preferred</span>
+              {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="card-footer d-flex justify-content-around">
+              <form action="{{ url_for('like_user', user_id=user.id) }}" method="post">
+                <button type="submit" class="btn btn-outline-success btn-sm">❤️ Like</button>
+              </form>
+              <a href="{{ url_for('skip_user', user_id=user.id) }}" class="btn btn-outline-danger btn-sm">⏭️ Skip</a>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mt-5">
+      No more users to browse. Check back later!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+/* static/css/audio.css */
+#audio-controls {
+  display: none; /* Hide built-in audio controls unless needed */
+}

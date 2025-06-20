@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Recharge Coins - Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Recharge Coins</h2>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('recharge') }}" class="mx-auto" style="max-width: 400px;">
+    <div class="mb-3">
+      <label for="amount" class="form-label">Enter amount of coins</label>
+      <input type="number" class="form-control" id="amount" name="amount" min="1" required>
+    </div>
+
+    <button type="submit" class="btn btn-danger w-100">Recharge</button>
+  </form>
+
+  <p class="text-muted mt-3 text-center">In production, this will connect to Stripe or M-Pesa for payment verification.</p>
+</div>
+{% endblock %}

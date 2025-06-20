@@ -1,0 +1,28 @@
+/* === form.css === */
+
+form .form-control,
+form .form-select {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+form .form-control:focus,
+form .form-select:focus {
+  border-color: #e83e8c;
+  box-shadow: 0 0 0 0.2rem rgba(232, 62, 140, 0.25);
+  outline: none;
+}
+
+form .form-label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  display: inline-block;
+}
+
+.alert {
+  border-radius: 8px;
+  margin-top: 1rem;
+}

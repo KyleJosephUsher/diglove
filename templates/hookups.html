@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Hookups - Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🔥 One Night Stand - Hookups</h2>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- User Cards -->
+  {% if users %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for user in users %}
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <!-- Profile Image -->
+            <img src="{{ url_for('static', filename='profile_pics/' ~ (user.profile_pic if user.profile_pic else 'default_profile.png')) }}"
+                 class="card-img-top" alt="{{ user.username }}'s profile picture"
+                 style="height: 250px; object-fit: cover;">
+
+            <div class="card-body">
+              <h5 class="card-title">{{ user.username }}</h5>
+              <p class="card-text">
+                <strong>Gender:</strong> {{ user.gender or 'Not specified' }}<br>
+                <strong>Interests:</strong> {{ user.interests or 'None' }}<br>
+                <strong>Location:</strong> {{ user.location or 'Unknown' }}
+              </p>
+
+              <!-- Badges -->
+              {% if user.one_night %}
+                <span class="badge bg-danger">1-Night Stand</span>
+              {% endif %}
+              {% if user.threesome_interest %}
+                <span class="badge bg-warning text-dark">Threesome</span>
+              {% endif %}
+              {% if user.is_premium %}
+                <span class="badge bg-dark text-light">Premium</span>
+              {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="card-footer d-flex justify-content-between">
+              <a href="{{ url_for('start_chat', user_id=user.id) }}" class="btn btn-outline-primary btn-sm">💬 Chat</a>
+              <a href="{{ url_for('send_like', user_id=user.id) }}" class="btn btn-danger btn-sm">❤️ Like</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mt-4">
+      No users found for hookups at the moment. Check back later or update your preferences.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

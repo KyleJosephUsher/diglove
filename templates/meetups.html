@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Meetups | Dig Love{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Find Someone to Meet</h2>
+
+    <!-- Filters -->
+    <form method="GET" action="{{ url_for('meetups') }}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <select name="gender" class="form-select">
+                <option value="" {% if not request.args.get('gender') %}selected{% endif %}>All Genders</option>
+                <option value="Male" {% if request.args.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if request.args.get('gender') == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if request.args.get('gender') == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="interest" class="form-control" placeholder="Interest" value="{{ request.args.get('interest', '') }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="one_night" id="one_night" {% if request.args.get('one_night') %}checked{% endif %}>
+                <label class="form-check-label" for="one_night">One-Night Stand</label>
+            </div>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="threesome" id="threesome" {% if request.args.get('threesome') %}checked{% endif %}>
+                <label class="form-check-label" for="threesome">Threesomes</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-danger w-100">Search</button>
+        </div>
+    </form>
+
+    <!-- Meetup Cards -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% if users %}
+            {% for user in users %}
+                {% if user.id != current_user.id %}
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_pic) if user.profile_pic else url_for('static', filename='default_profile.png') }}"
+                             class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ user.username }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user.username }}</h5>
+                            <p><strong>Gender:</strong> {{ user.gender or 'Not specified' }}</p>
+                            <p><strong>Interests:</strong> {{ user.interests or 'None' }}</p>
+                            {% if user.one_night %}
+                                <span class="badge bg-danger">One-Night Stand</span>
+                            {% endif %}
+                            {% if user.threesome_interest %}
+                                <span class="badge bg-warning text-dark">Threesome</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer text-center">
+                            <form method="POST" action="{{ url_for('request_meetup', user_id=user.id) }}">
+                                <button type="submit" class="btn btn-primary btn-sm">Request Meetup</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p class="text-center text-muted">No users found matching your criteria. Try adjusting your filters or check back later.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}My Profile | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 700px;">
+
+  <h2 class="text-center mb-4">My Profile</h2>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Profile display -->
+  <div id="profile-view" class="card shadow-sm mb-4">
+    <div class="row g-0 align-items-center">
+      <div class="col-md-4 text-center p-3">
+        {% if current_user.profile_pic %}
+          <img src="{{ url_for('static', filename='profile_pics/' ~ current_user.profile_pic) }}" 
+               class="img-fluid rounded-circle" alt="Profile Picture" style="max-width: 200px;">
+        {% else %}
+          <img src="{{ url_for('static', filename='default_profile.png') }}" 
+               class="img-fluid rounded-circle" alt="Profile Picture" style="max-width: 200px;">
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h4 class="card-title">{{ current_user.username }}</h4>
+          <p><strong>Email:</strong> {{ current_user.email }}</p>
+          <p><strong>Gender:</strong> {{ current_user.gender or 'Not specified' }}</p>
+          <p><strong>Interests:</strong> {{ current_user.interests or 'Not specified' }}</p>
+          <p><strong>Location:</strong> {{ current_user.location or 'Not specified' }}</p>
+          <p>
+            {% if current_user.one_night %}
+              <span class="badge bg-danger me-2">🔥 Interested in One-Night Stands</span>
+            {% endif %}
+            {% if current_user.threesome_interest %}
+              <span class="badge bg-warning text-dark">👨‍❤️‍👨 Threesome Friendly</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer text-center">
+      <button id="edit-btn" class="btn btn-outline-primary">Edit Profile</button>
+    </div>
+  </div>
+
+  <!-- Edit form (hidden initially) -->
+  <div id="profile-edit" class="card shadow-sm p-4" style="display:none;">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input id="username" name="username" type="text" class="form-control" value="{{ current_user.username }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" name="email" type="email" class="form-control" value="{{ current_user.email }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" name="gender" class="form-select" required>
+          <option value="" disabled>Select Gender</option>
+          <option value="Male" {% if current_user.gender == "Male" %}selected{% endif %}>Male</option>
+          <option value="Female" {% if current_user.gender == "Female" %}selected{% endif %}>Female</option>
+          <option value="Other" {% if current_user.gender == "Other" %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="interests" class="form-label">Interests</label>
+        <input id="interests" name="interests" type="text" class="form-control" value="{{ current_user.interests }}">
+      </div>
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input id="location" name="location" type="text" class="form-control" value="{{ current_user.location }}">
+      </div>
+      <div class="mb-3">
+        <label for="profile_pic" class="form-label">Profile Picture (optional)</label>
+        <input id="profile_pic" name="profile_pic" type="file" class="form-control" accept="image/*">
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="one_night" name="one_night" {% if current_user.one_night %}checked{% endif %}>
+        <label class="form-check-label" for="one_night">Looking for One-Night Stand</label>
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="threesome_interest" name="threesome_interest" {% if current_user.threesome_interest %}checked{% endif %}>
+        <label class="form-check-label" for="threesome_interest">Interested in Threesomes</label>
+      </div>
+      <button type="submit" class="btn btn-danger w-100">Save Changes</button>
+      <button type="button" id="cancel-btn" class="btn btn-secondary w-100 mt-2">Cancel</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  const editBtn = document.getElementById('edit-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
+  const profileView = document.getElementById('profile-view');
+  const profileEdit = document.getElementById('profile-edit');
+
+  editBtn.addEventListener('click', () => {
+    profileView.style.display = 'none';
+    profileEdit.style.display = 'block';
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    profileEdit.style.display = 'none';
+    profileView.style.display = 'block';
+  });
+</script>
+{% endblock %}

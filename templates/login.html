@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Login | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+
+      <!-- Title -->
+      <h2 class="text-center mb-4">🔐 Log In to Dig Love</h2>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Login Form -->
+      <form method="POST" class="p-4 border rounded bg-light shadow-sm">
+        <div class="mb-3">
+          <label for="email_or_username" class="form-label fw-semibold">📧 Email or Username</label>
+          <input type="text" name="email_or_username" id="email_or_username" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label fw-semibold">🔑 Password</label>
+          <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-danger w-100 fw-bold">Log In</button>
+      </form>
+
+      <!-- Register Link -->
+      <p class="text-center mt-3">
+        Don’t have an account?
+        <a href="{{ url_for('register') }}" class="fw-semibold text-danger">Register here</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Likes - Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">❤️ People You've Liked</h2>
+
+  {% if liked_users %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for user in liked_users %}
+        <div class="col">
+          <div class="card profile-card h-100 shadow-sm border-0 rounded">
+            <!-- Profile Image -->
+            <img src="{{ url_for('static', filename='profile_pics/' ~ (user.profile_pic or 'default_profile.png')) }}"
+                 class="card-img-top profile-img" alt="{{ user.username }}">
+
+            <!-- Profile Info -->
+            <div class="card-body text-center">
+              <h5 class="card-title">
+                {{ user.username }}{% if user.age %}, {{ user.age }}{% endif %}
+              </h5>
+              <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ user.location or 'Unknown' }}</p>
+
+              {% if user.like_timestamp %}
+                <p class="text-muted small"><i class="bi bi-clock"></i> Liked on {{ user.like_timestamp.strftime('%b %d, %Y %H:%M') }}</p>
+              {% endif %}
+
+              <!-- Unlike Button -->
+              <form method="POST" action="{{ url_for('unlike_user', user_id=user.id) }}">
+                <button type="submit" class="btn btn-outline-danger w-100">
+                  <i class="bi bi-heartbreak-fill"></i> Unlike
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      You haven't liked anyone yet. Start exploring profiles to make connections!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+  .profile-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  .profile-img {
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

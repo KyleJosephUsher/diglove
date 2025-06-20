@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Stories | Dig Love{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">📸 Latest Stories</h2>
+
+  <div class="text-end mb-3">
+    <a href="{{ url_for('create_story') }}" class="btn btn-primary">+ Post a Story</a>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if stories %}
+    <div class="row">
+      {% for story in stories %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow">
+            {% if story.media %}
+              <img src="{{ url_for('static', filename='uploads/' ~ story.media) }}" class="card-img-top" alt="Story media">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ story.user.username }}</h5>
+              <p class="card-text">{{ story.caption }}</p>
+              <small class="text-muted">{{ story.timestamp.strftime('%b %d, %Y %I:%M %p') }}</small>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">No stories have been posted yet.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

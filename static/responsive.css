@@ -1,0 +1,33 @@
+/* === responsive.css === */
+
+/* Responsive adjustments for tablets and smaller devices */
+@media (max-width: 768px) {
+  /* Profile images smaller height for better fit */
+  .profile-img {
+    height: 180px;
+  }
+
+  /* Make all buttons full width for easier tapping */
+  .btn {
+    width: 100%;
+  }
+
+  /* Reduce container side padding for small screens */
+  .container {
+    padding: 1rem;
+  }
+}
+
+/* Additional mobile optimizations (optional) */
+@media (max-width: 480px) {
+  /* Stack card elements vertically on very small screens if needed */
+  .card {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Increase spacing in forms and buttons */
+  form .form-control,
+  form .form-select {
+    font-size: 1.1rem;
+  }
+}

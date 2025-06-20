@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Chat with {{ target_user.username }} | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <h2 class="text-center mb-4">💬 Chat with {{ target_user.username }}</h2>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Chat Display Area -->
+  <div id="messages"
+       class="border rounded p-3 mb-3 bg-light"
+       style="height: 400px; overflow-y: auto;"
+       aria-live="polite" role="log">
+    <!-- Chat messages dynamically inserted by JS -->
+  </div>
+
+  <!-- Chat Input Form -->
+  <form id="chatForm" class="d-flex gap-2" autocomplete="off" role="form" aria-label="Chat form">
+    <input id="chatInput"
+           type="text"
+           class="form-control"
+           placeholder="Type your message..."
+           required
+           aria-label="Message input">
+    <button type="submit" class="btn btn-danger" aria-label="Send message">Send</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Pass Room Info to JS -->
+<script>
+  const CHAT_ROOM = "{{ room_id }}";
+  const CURRENT_USER = "{{ current_user.username }}";
+</script>
+
+<!-- Socket.IO & Custom Chat Logic -->
+<script src="https://cdn.socket.io/4.7.1/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

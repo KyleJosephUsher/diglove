@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Your Matches | Dig Love{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <h2 class="text-center mb-4">🔥 Your Matches</h2>
+
+  {% if matches %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for user in matches %}
+        <div class="col">
+          <div class="card shadow-sm h-100">
+            <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_pic) if user.profile_pic else url_for('static', filename='default_profile.png') }}"
+                 class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ user.username }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ user.username }}</h5>
+              <p><strong>Gender:</strong> {{ user.gender or 'Not specified' }}</p>
+              <p><strong>Interests:</strong> {{ user.interests or 'Not specified' }}</p>
+              {% if user.one_night %}
+                <span class="badge bg-danger">One-Night Stand</span>
+              {% endif %}
+              {% if user.threesome_interest %}
+                <span class="badge bg-warning text-dark">Threesome</span>
+              {% endif %}
+            </div>
+            <div class="card-footer text-center">
+              <a href="{{ url_for('start_chat', user_id=user.id) }}" class="btn btn-success btn-sm">
+                💬 Start Chat
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted">
+      You don’t have any matches yet.
+      <a href="{{ url_for('browse') }}">Browse profiles</a> or
+      <a href="{{ url_for('meetups') }}">plan a meetup</a> to find new connections!
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

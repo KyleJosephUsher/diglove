@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Dig Love{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-center">Welcome, {{ current_user.username }}! 👋</h1>
+
+<!-- Stats Overview -->
+<div class="row mb-5 text-center">
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3 mb-3 rounded {% if current_user.is_premium %}premium-card{% endif %}">
+      <h5>👥 Matches</h5>
+      <p class="display-5 text-danger">{{ matches_count or 0 }}</p>
+      <a href="{{ url_for('matches') }}" class="btn btn-danger w-100">View Matches</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3 mb-3 rounded {% if current_user.is_premium %}premium-card{% endif %}">
+      <h5>📍 Meetups</h5>
+      <p class="display-5 text-primary">{{ meetups_count or 0 }}</p>
+      <a href="{{ url_for('meetups') }}" class="btn btn-primary w-100">View Meetups</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3 mb-3 rounded {% if current_user.is_premium %}premium-card{% endif %}">
+      <h5>💰 Coins</h5>
+      <p class="display-5 text-warning">{{ current_user.coins or 0 }}</p>
+      <a href="{{ url_for('buy_coins') }}" class="btn btn-warning text-dark w-100">Buy More Coins</a>
+    </div>
+  </div>
+</div>
+
+<!-- Discover New People -->
+<h3 class="mb-3">🔍 Discover New People</h3>
+<div class="row g-4">
+  {% for user in users %}
+    {% if user.id != current_user.id %}
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm {% if user.is_premium %}premium-card{% endif %}">
+          <!-- Profile Picture -->
+          <img src="{{ url_for('static', filename='profile_pics/' ~ user.profile_pic) if user.profile_pic else url_for('static', filename='default_profile.png') }}"
+               class="card-img-top"
+               alt="{{ user.username }}"
+               style="height: 250px; object-fit: cover;">
+
+          <!-- Info -->
+          <div class="card-body">
+            <h5 class="card-title">
+              {{ user.username }}
+              {% if user.is_premium %}
+                <span class="badge badge-premium ms-2">🌟 Premium</span>
+              {% endif %}
+            </h5>
+            <p><strong>Gender:</strong> {{ user.gender or 'Not specified' }}</p>
+            <p><strong>Interests:</strong> {{ user.interests or 'None' }}</p>
+
+            {% if user.one_night %}
+              <span class="badge bg-danger">1-Night Stand</span>
+            {% endif %}
+            {% if user.threesome_interest %}
+              <span class="badge bg-warning text-dark">Threesome</span>
+            {% endif %}
+          </div>
+
+          <!-- Actions -->
+          <div class="card-footer text-center">
+            <a href="{{ url_for('send_like', user_id=user.id) }}" class="btn btn-danger btn-sm me-2">❤️ Like</a>
+            <a href="{{ url_for('skip_user', user_id=user.id) }}" class="btn btn-outline-secondary btn-sm">⏭️ Skip</a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
